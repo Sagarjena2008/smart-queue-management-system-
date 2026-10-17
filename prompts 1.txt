@@ -1,0 +1,45 @@
+Build a modern, responsive Queue Management System website called "SmartQueue".
+
+OBJECTIVE:
+Create a digital token management platform that allows customers to generate tokens online, view the current queue, and track their token status in real time.
+
+TECHNOLOGIES:
+Use HTML, CSS, JavaScript, PHP, and MySQL. Use Bootstrap for responsive design.
+
+PAGES AND FEATURES:
+
+1. HOME PAGE
+
+* Display the SmartQueue logo and navigation menu.
+* Add a welcome message: "Welcome to SmartQueue — Your Turn, Without the Wait."
+* Explain how the system works.
+* Add buttons for "Generate Token", "View Queue", and "Admin Login".
+* Display available services and basic instructions.
+
+2. TOKEN GENERATION PAGE
+
+* Provide a form for customer name, phone number, and service selection.
+* Generate a unique token number automatically.
+* Display the token number, queue position, date, time, and estimated waiting time.
+* Prevent duplicate token submissions caused by repeated button clicks.
+
+3. LIVE QUEUE PAGE
+
+* Display the currently serving token.
+* Display the next tokens in line.
+* Show each token's status and estimated waiting time.
+* Automatically refresh queue information without requiring a page reload.
+
+4. ADMIN DASHBOARD
+
+* Show total tokens, waiting customers, customers being served, and completed tokens.
+* Display a table containing token number, customer name, service, time, and status.
+* Provide a clean dashboard with search and filtering features.
+
+5. DESIGN
+
+* Use a professional dashboard layout.
+* Use readable fonts, attractive cards, clear buttons, and accessible colours.
+* Make the website responsive on mobile phones, tablets, and computers.
+
+Generate the complete project structure and working frontend code. Do not create non-functional buttons or fake backend functionality. Clearly identify any features that require backend implementation.

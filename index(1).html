@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartQueue — Token Management</title>
+<style>
+:root{--navy:#14213d;--blue:#2563eb;--cyan:#06b6d4;--bg:#f4f7fb;--ink:#172033;--muted:#64748b;--line:#e2e8f0;--green:#16a34a;--amber:#d97706;--red:#dc2626}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#14213d,#1d4ed8);color:white;padding:18px 5vw;position:sticky;top:0;z-index:5;box-shadow:0 4px 20px #0f172a20}
+.nav{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:850;font-size:1.35rem;letter-spacing:-.5px}.brand span{color:#67e8f9}.navlinks{display:flex;gap:20px;flex-wrap:wrap}.navlinks a{color:#eaf2ff;text-decoration:none;font-weight:600;font-size:.93rem}.navlinks a:hover{color:#67e8f9}
+.hero{background:linear-gradient(120deg,#14213d,#1d4ed8);color:white;padding:48px 5vw 74px}.hero-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:1.25fr .75fr;align-items:center;gap:35px}.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:.75rem;color:#a5f3fc;font-weight:800}.hero h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.05;letter-spacing:-1.7px;margin:12px 0 18px}.hero p{color:#dbeafe;max-width:620px;font-size:1.05rem}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.btn{border:0;border-radius:11px;padding:12px 17px;font:inherit;font-weight:750;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}.btn:hover{transform:translateY(-1px);filter:brightness(.97)}.primary{background:var(--blue);color:white}.white{background:white;color:#1d4ed8}.outline{background:transparent;border:1px solid #cbd5e1;color:inherit}.soft{background:#eaf2ff;color:#1d4ed8}.danger{background:#fee2e2;color:#991b1b}.small{padding:7px 10px;font-size:.84rem;border-radius:8px}
+.hero-card{background:#ffffff12;border:1px solid #ffffff30;border-radius:24px;padding:26px;backdrop-filter:blur(12px)}.hero-card .big{font-size:3.6rem;font-weight:900;line-height:1}.hero-card p{font-size:.92rem;margin-bottom:0}.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#4ade80;margin-right:7px;box-shadow:0 0 0 5px #4ade8022}
+main{max-width:1180px;margin:-32px auto 0;padding:0 22px 50px;position:relative}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.stat,.panel{background:white;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 25px #0f172a08}.stat{padding:20px}.stat-label{font-size:.87rem;color:var(--muted);font-weight:650}.stat-value{font-size:1.9rem;font-weight:850;margin-top:4px}.stat-note{font-size:.82rem;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.panel{padding:24px;margin-bottom:20px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.panel h2{font-size:1.25rem;margin:0;letter-spacing:-.3px}.sub{color:var(--muted);font-size:.9rem;margin:5px 0 0}
+label{display:block;font-weight:700;font-size:.9rem;margin:0 0 7px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px 13px;font:inherit;background:white;color:var(--ink);outline:none}input:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px #3b82f620}.field{margin-bottom:15px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.help{font-size:.8rem;color:var(--muted);margin-top:5px}
+.ticket{border:1px dashed #93c5fd;background:#eff6ff;border-radius:16px;padding:18px;margin-top:17px;display:none}.ticket-top{display:flex;justify-content:space-between;gap:12px}.ticket-number{font-size:2.7rem;font-weight:900;color:#1d4ed8;line-height:1.2}.ticket small{color:var(--muted)}.ticket .ticket-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.ticket .ticket-info div{background:#ffffffc9;border-radius:9px;padding:10px}.ticket .ticket-info span{display:block;font-size:.75rem;color:var(--muted)}.ticket .ticket-info strong{display:block;overflow-wrap:anywhere}
+.queue-list{display:flex;flex-direction:column;gap:10px}.queue-item{border:1px solid var(--line);border-radius:12px;padding:13px;display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center}.queue-token{font-size:1.2rem;font-weight:900;color:#1d4ed8;background:#eff6ff;border-radius:9px;padding:10px 5px;text-align:center}.queue-name{font-weight:800;overflow-wrap:anywhere}.queue-meta{font-size:.82rem;color:var(--muted)}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:.76rem;font-weight:800;white-space:nowrap}.Waiting{background:#fef3c7;color:#92400e}.Serving{background:#dcfce7;color:#166534}.Completed{background:#e2e8f0;color:#334155}.Skipped,.Cancelled{background:#fee2e2;color:#991b1b}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed #cbd5e1;border-radius:12px}.lookup-result{margin-top:12px;padding:13px;border-radius:10px;background:#f1f5f9;display:none}.admin-tools{display:flex;gap:8px;flex-wrap:wrap}.admin-note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px 14px;border-radius:10px;font-size:.86rem;margin-bottom:16px}.status-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+footer{background:#0f172a;color:#cbd5e1;text-align:center;padding:25px 20px;font-size:.86rem}footer strong{color:white}.toast{position:fixed;right:18px;bottom:18px;background:#0f172a;color:white;padding:13px 17px;border-radius:12px;box-shadow:0 8px 30px #0002;z-index:10;max-width:calc(100% - 36px);display:none}
+@media(max-width:800px){.hero-inner,.layout{grid-template-columns:1fr}.hero{padding-bottom:60px}.hero-card{max-width:500px}.stats{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column;gap:10px}.navlinks{gap:13px}.panel{padding:18px}}
+@media(max-width:450px){main{padding-left:12px;padding-right:12px}.form-row{grid-template-columns:1fr}.queue-item{grid-template-columns:54px 1fr}.queue-item>.badge{grid-column:2}.ticket .ticket-info{grid-template-columns:1fr 1fr}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="brand">◉ Smart<span>Queue</span></div><nav class="navlinks"><a href="#register">Get a Token</a><a href="#queue">Live Queue</a><a href="#track">Track Token</a><a href="#admin">Manage Queue</a></nav></div></header>
+<section class="hero"><div class="hero-inner"><div><div class="eyebrow">Simple • Smart • Organized</div><h1>Less waiting.<br>More doing.</h1><p>Generate a digital token, see the live queue, and track your place without standing in a long line.</p><div class="hero-actions"><a class="btn white" href="#register">＋ Get Your Token</a><a class="btn outline" style="color:white;border-color:#ffffff80" href="#queue">View Live Queue ↓</a></div></div><div class="hero-card"><div class="eyebrow"><span class="live-dot"></span>QUEUE STATUS</div><div class="big" id="heroWaiting">0</div><div style="font-weight:800;font-size:1.1rem">People waiting</div><p>Queue status updates when tokens are created or managed on this device.</p></div></div></section>
+<main>
+<div class="stats"><div class="stat"><div class="stat-label">Now Serving</div><div class="stat-value" id="nowServing">—</div><div class="stat-note">Current active token</div></div><div class="stat"><div class="stat-label">Waiting</div><div class="stat-value" id="waitingCount">0</div><div class="stat-note">Tokens in the waiting line</div></div><div class="stat"><div class="stat-label">Completed Today</div><div class="stat-value" id="completedCount">0</div><div class="stat-note">Finished tokens saved here</div></div></div>
+<div class="layout">
+<div>
+<section class="panel" id="register"><div class="panel-head"><div><h2>🎟️ Get a Token</h2><p class="sub">Fill in your details to join the queue.</p></div></div>
+<form id="tokenForm"><div class="field"><label for="customerName">Full name *</label><input id="customerName" name="name" placeholder="Enter your name" maxlength="70" required></div><div class="form-row"><div class="field"><label for="phone">Phone number *</label><input id="phone" name="phone" inputmode="tel" placeholder="10-digit mobile number" pattern="[0-9+\-\s()]{10,16}" required><div class="help">Used for this demo's token record only.</div></div><div class="field"><label for="service">Service *</label><select id="service" required><option value="">Choose service</option><option>General Enquiry</option><option>Registration</option><option>Payment</option><option>Customer Support</option><option>Appointment</option></select></div></div><button class="btn primary" type="submit" style="width:100%">Generate My Token →</button></form>
+<div class="ticket" id="ticket"><div class="ticket-top"><div><small>Your token number</small><div class="ticket-number" id="ticketNo">A001</div></div><span class="badge Waiting" id="ticketStatus">Waiting</span></div><div class="ticket-info"><div><span>Name</span><strong id="ticketName"></strong></div><div><span>Service</span><strong id="ticketService"></strong></div><div><span>People ahead</span><strong id="ticketAhead">0</strong></div><div><span>Created</span><strong id="ticketTime"></strong></div></div><button type="button" class="btn soft" onclick="window.print()">Print token</button></div>
+</section>
+<section class="panel" id="track"><div class="panel-head"><div><h2>🔎 Track Your Token</h2><p class="sub">Enter your token number to check its status.</p></div></div><form id="trackForm"><div class="form-row"><div class="field" style="margin:0"><label for="trackToken">Token number</label><input id="trackToken" placeholder="e.g. A001" required></div><div style="display:flex;align-items:end"><button class="btn primary" type="submit" style="width:100%">Check Status</button></div></div></form><div class="lookup-result" id="lookupResult"></div></section>
+</div>
+<div>
+<section class="panel" id="queue"><div class="panel-head"><div><h2>📋 Live Queue</h2><p class="sub">Tokens currently waiting or being served.</p></div><button class="btn soft small" id="refreshBtn" type="button">↻ Refresh</button></div><div class="queue-list" id="queueList"></div></section>
+<section class="panel" id="admin"><div class="panel-head"><div><h2>⚙️ Queue Management</h2><p class="sub">Demo controls for the queue operator.</p></div></div><div class="admin-note"><strong>Demo mode:</strong> data is stored in this browser only. This is not a secure admin panel and is not shared with other devices.</div><div class="admin-tools"><button class="btn primary" id="nextBtn" type="button">▶ Call Next Token</button><button class="btn soft" id="completeBtn" type="button">✓ Complete Serving</button><button class="btn outline" id="exportBtn" type="button">↓ Export CSV</button><button class="btn danger" id="resetBtn" type="button">Reset Demo Data</button></div><p class="help" style="margin-top:12px">Use these controls to demonstrate how a queue operator advances and completes tokens.</p></section>
+</div></div></main>
+<footer><strong>SmartQueue</strong> · A simple digital token management demo.<br>For a real multi-user service, connect a backend database and secure operator login.</footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const STORAGE_KEY='smartqueue_demo_v1';
+let tokens=loadTokens(); let sequence=Number(localStorage.getItem('smartqueue_seq')||1); let lastCreated=null;
+function loadTokens(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return []}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(tokens));localStorage.setItem('smartqueue_seq',String(sequence));render()}
+function pad(n){return String(n).padStart(3,'0')}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display='none',2800)}
+function currentServing(){return tokens.find(t=>t.status==='Serving')}
+function waiting(){return tokens.filter(t=>t.status==='Waiting').sort((a,b)=>a.created-b.created)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function timeText(ts){return new Date(ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
+function aheadFor(t){if(t.status!=='Waiting')return 0;return waiting().filter(w=>w.created<t.created).length+(currentServing()?1:0)}
+function render(){
+ const w=waiting(),s=currentServing(),done=tokens.filter(t=>t.status==='Completed');
+ document.getElementById('heroWaiting').textContent=w.length;
+ document.getElementById('waitingCount').textContent=w.length;
+ document.getElementById('completedCount').textContent=done.length;
+ document.getElementById('nowServing').textContent=s?s.number:'—';
+ const active=tokens.filter(t=>t.status==='Waiting'||t.status==='Serving').sort((a,b)=>a.created-b.created);
+ const list=document.getElementById('queueList');
+ if(!active.length){list.innerHTML='<div class="empty">✨ The queue is empty.<br>Generate a token to get started.</div>'}
+ else list.innerHTML=active.map(t=>`<div class="queue-item"><div class="queue-token">${esc(t.number)}</div><div><div class="queue-name">${esc(t.name)}</div><div class="queue-meta">${esc(t.service)} · ${timeText(t.created)}</div></div><span class="badge ${t.status}">${t.status}</span></div>`).join('');
+ if(lastCreated){const t=tokens.find(x=>x.id===lastCreated);if(t){document.getElementById('ticketNo').textContent=t.number;document.getElementById('ticketStatus').textContent=t.status;document.getElementById('ticketStatus').className='badge '+t.status;document.getElementById('ticketName').textContent=t.name;document.getElementById('ticketService').textContent=t.service;document.getElementById('ticketAhead').textContent=aheadFor(t);}}
+}
+document.getElementById('tokenForm').addEventListener('submit',e=>{
+ e.preventDefault();const name=document.getElementById('customerName').value.trim(),phone=document.getElementById('phone').value.trim(),service=document.getElementById('service').value;
+ if(!name||!phone||!service)return;
+ const digits=phone.replace(/\D/g,'');if(digits.length<10||digits.length>15){toast('Please enter a valid phone number.');return}
+ const token={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),number:'A'+pad(sequence++),name,phone,service,status:'Waiting',created:Date.now()};
+ tokens.push(token);lastCreated=token.id;save();
+ document.getElementById('ticketTime').textContent=timeText(token.created);document.getElementById('ticket').style.display='block';document.getElementById('trackToken').value=token.number;document.getElementById('customerName').value='';document.getElementById('phone').value='';document.getElementById('service').value='';
+ document.getElementById('ticket').scrollIntoView({behavior:'smooth',block:'nearest'});toast('Token '+token.number+' created successfully!');
+});
+document.getElementById('trackForm').addEventListener('submit',e=>{
+ e.preventDefault();const q=document.getElementById('trackToken').value.trim().toUpperCase();const t=tokens.find(x=>x.number.toUpperCase()===q);const box=document.getElementById('lookupResult');box.style.display='block';
+ if(!t){box.innerHTML='No token found. Please check the token number.';return}
+ box.innerHTML=`<strong>${esc(t.number)} — ${esc(t.name)}</strong><br>Status: <span class="badge ${t.status}">${t.status}</span><br>Service: ${esc(t.service)}<br>${t.status==='Waiting'?'People ahead: '+aheadFor(t):t.status==='Serving'?'It is your turn now.':'Token updated at '+timeText(Date.now())}`;
+});
+document.getElementById('nextBtn').addEventListener('click',()=>{
+ const active=currentServing();if(active){toast('Complete the currently serving token first.');return}
+ const next=waiting()[0];if(!next){toast('No waiting tokens.');return}next.status='Serving';save();toast('Now serving '+next.number);
+});
+document.getElementById('completeBtn').addEventListener('click',()=>{const s=currentServing();if(!s){toast('There is no token being served.');return}s.status='Completed';s.finished=Date.now();save();toast(s.number+' marked completed.')});
+document.getElementById('refreshBtn').addEventListener('click',()=>{tokens=loadTokens();render();toast('Queue refreshed.')});
+document.getElementById('resetBtn').addEventListener('click',()=>{if(!confirm('Delete all SmartQueue demo tokens from this browser?'))return;tokens=[];sequence=1;lastCreated=null;localStorage.removeItem(STORAGE_KEY);localStorage.setItem('smartqueue_seq','1');document.getElementById('ticket').style.display='none';document.getElementById('lookupResult').style.display='none';save();toast('Demo data reset.')});
+document.getElementById('exportBtn').addEventListener('click',()=>{if(!tokens.length){toast('There are no tokens to export.');return}const rows=[['Token','Name','Phone','Service','Status','Created'],...tokens.map(t=>[t.number,t.name,t.phone,t.service,t.status,new Date(t.created).toISOString()])];const csv=rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='smartqueue-tokens.csv';a.click();URL.revokeObjectURL(a.href);});
+render();
+</script>
+</body>
+</html>

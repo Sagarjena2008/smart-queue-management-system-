@@ -1,0 +1,39 @@
+Upgrade SmartQueue with a complete real-time queue management and staff control system.
+
+ADMIN FEATURES:
+
+1. Call the next waiting token.
+2. Mark a called token as "Serving".
+3. Mark a serving token as "Completed".
+4. Skip a token when the customer does not respond.
+5. Cancel a token when necessary.
+6. Recall a previously called token.
+7. View all waiting, called, serving, completed, skipped, and cancelled tokens.
+8. Search tokens by token number or customer name.
+9. Filter tokens by service, date, and status.
+
+QUEUE RULES:
+
+* Only authorized staff can modify token statuses.
+* Prevent two staff members from accidentally calling the same next token.
+* Maintain the correct queue order.
+* Do not serve completed or cancelled tokens again.
+* Record the time and staff member responsible for each status change.
+* Define clear rules for recalling skipped tokens.
+* Use database transactions and appropriate locking to prevent race conditions.
+
+LIVE DISPLAY:
+
+* Show "Now Serving" prominently.
+* Display the next customers in the queue.
+* Update the customer screen automatically using AJAX polling or Server-Sent Events.
+* Show the current token status and estimated waiting time.
+* Display a message when no customers are waiting.
+
+NOTIFICATIONS:
+
+* Display an on-screen notification when a token is called.
+* Optionally support SMS notifications through a legitimate SMS provider.
+* Never claim an SMS was sent unless the provider confirms success.
+
+Provide working PHP APIs, JavaScript, database updates, and the complete admin dashboard. Implement proper authentication and server-side authorization.

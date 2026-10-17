@@ -1,0 +1,48 @@
+Perform a complete production-readiness upgrade of the SmartQueue Queue Management System.
+
+1. SECURITY
+
+* Implement secure admin login and logout.
+* Store passwords using PHP password_hash() and verify them using password_verify().
+* Use prepared SQL statements.
+* Add CSRF protection to state-changing requests.
+* Validate all input on the server.
+* Add login rate limiting and session security.
+* Protect admin APIs against unauthorized access.
+* Keep database credentials in environment configuration rather than public source code.
+* Do not expose customer phone numbers on the public queue display.
+
+2. USER EXPERIENCE
+
+* Add a customer token lookup page.
+* Allow customers to check their token status using their token number and an appropriate verification method.
+* Show queue position and estimated waiting time.
+* Add clear success, loading, and error messages.
+* Make all pages responsive and accessible.
+* Provide a printable token receipt.
+
+3. ADMIN REPORTS
+
+* Show daily tokens generated.
+* Show completed and cancelled tokens.
+* Calculate average service time.
+* Show peak-hour queue statistics.
+* Allow authorized staff to export appropriate reports as CSV.
+
+4. RELIABILITY
+
+* Handle database connection errors.
+* Prevent invalid status transitions.
+* Ensure queue positions remain correct after cancellations and completions.
+* Add audit logs for important administrative actions.
+* Test simultaneous token generation and simultaneous requests to call the next customer.
+
+5. DEPLOYMENT
+
+* Provide instructions for running the project locally using XAMPP.
+* Explain how to create the MySQL database and import the SQL file.
+* Explain how to configure PHP and the database connection.
+* Provide deployment instructions for a PHP-compatible web host with HTTPS.
+* Include a README file and test cases.
+
+Return the complete working source code and explain how to test every major feature. Do not leave placeholder functions or pretend that external services are connected when they are not.

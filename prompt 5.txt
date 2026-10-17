@@ -1,0 +1,72 @@
+<?php
+
+// Keep these credentials private.
+// Configure them as environment variables on your server.
+$accountSid = getenv("TWILIO_ACCOUNT_SID");
+$authToken  = getenv("TWILIO_AUTH_TOKEN");
+$twilioNumber = getenv("TWILIO_PHONE_NUMBER");
+
+// Your notification number
+$adminNumber = "+918454947468";
+
+// Registration details received from your form
+$name = trim($_POST["name"] ?? "");
+$phone = trim($_POST["phone"] ?? "");
+$service = trim($_POST["service"] ?? "");
+
+// Basic validation
+if ($name === "" || $phone === "" || $service === "") {
+    http_response_code(400);
+    exit("Please complete all required fields.");
+}
+
+if (!$accountSid || !$authToken || !$twilioNumber) {
+    http_response_code(500);
+    exit("SMS service is not configured.");
+}
+
+// Build notification
+$message = "New website registration!\n"
+         . "Name: " . $name . "\n"
+         . "Phone: " . $phone . "\n"
+         . "Service: " . $service;
+
+// Send SMS through Twilio
+$url = "https://api.twilio.com/2010-04-01/Accounts/"
+     . $accountSid . "/Messages.json";
+
+$data = [
+    "To"   => $adminNumber,
+    "From" => $twilioNumber,
+    "Body" => $message
+];
+
+$ch = curl_init($url);
+
+curl_setopt_array($ch, [
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => http_build_query($data),
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_USERPWD => $accountSid . ":" . $authToken,
+    CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+    CURLOPT_TIMEOUT => 20
+]);
+
+$response = curl_exec($ch);
+$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+if ($response === false) {
+    curl_close($ch);
+    http_response_code(502);
+    exit("Could not contact the SMS service.");
+}
+
+curl_close($ch);
+
+if ($status >= 200 && $status < 300) {
+    echo "Registration notification sent successfully!";
+} else {
+    http_response_code(502);
+    echo "SMS could not be sent. Please check your SMS configuration.";
+}
+?>
